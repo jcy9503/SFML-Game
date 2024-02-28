@@ -1,25 +1,38 @@
 ﻿#include "../stdafx.h"
 #include "Shape.h"
-#include "Rand.h"
-
-Shape::Shape(const Vec2& pos, const float radius)
-    : Shape(pos, radius, Rand::random_segments(), Rand::random_color()) {}
 
 Shape::Shape(
-    const Vec2&      pos, const float radius, const int segments,
-    const sf::Color& color)
-    : circle(radius, segments), m_radius(radius), m_pointCount(segments), m_color(color)
+	const Vec2&      pos, const float   rad, const int segments,
+	const sf::Color& col, const float rot_speed)
+	: m_pos(pos), m_pointCount(segments), m_color(col), m_radius(rad),
+	  m_rotSpeed(rot_speed), circle(rad, segments)
 {
-    circle.setPosition(pos.x, pos.y);
-    circle.setFillColor(color);
+	position = pos;
+	point_count = segments;
+	color = col;
+	radius = rad;
+	circle.setOrigin(rad, rad);
 }
 
-void Shape::reset_position(const Vec2& pos)
+void Shape::reset(
+	const Vec2& pos, const size_t           p_count, const float rad,
+	const float rot_speed, const sf::Color& col)
 {
-    circle.setPosition(pos.x, pos.y);
+	position       = pos;
+	point_count    = p_count;
+	color          = col;
+	radius         = rad;
+	rotation_speed = rot_speed;
+	circle.setOrigin(rad, rad);
 }
 
 void Shape::update_position_offset(const Vec2& vel)
 {
-    circle.setPosition(circle.getPosition() + vel);
+	if (vel == vec2_zero) return;
+	position = position + vel * delta_time;
+}
+
+void Shape::update_rotation()
+{
+	circle.setRotation(circle.getRotation() + rotation_speed * delta_time);
 }

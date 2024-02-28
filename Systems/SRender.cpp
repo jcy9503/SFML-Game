@@ -1,5 +1,7 @@
 ﻿#include "../stdafx.h"
 #include "SRender.h"
+
+#include "SInterface.h"
 #include "../Components/Shape.h"
 
 void SRender::set_background(const sf::Color color)
@@ -20,15 +22,35 @@ void SRender::update() const
         return;
 
     window.clear(m_background);
-    render(EntityManager::get().get_entities());
-    ImGui::SFML::Render(window);
+    render_objects();
+    render_uis();
     window.display();
 }
 
-void SRender::render(const ENTITY_SET& entities)
+void SRender::render_objects()
 {
-    for(auto iter = entities.begin(); iter != entities.end(); ++iter)
-    {
-        window.draw((*iter)->shape->circle);
-    }
+	render_entities("Enemy");
+	render_entities("Bullet");
+	render_entities("Player");
+}
+
+void SRender::render_entities(const std::string& tag)
+{
+	const ENTITY_SET& entities = EntityManager::get().get_entities(tag);
+	
+	for(const auto& entity : entities)
+	{
+		window.draw(entity->shape->circle);
+		entity->shape->update_rotation();
+	}
+}
+
+void SRender::render_uis()
+{
+	const auto& texts = SInterface::get().get_texts();
+	for (const auto& [key, text] : texts)
+	{
+		window.draw(text);
+	}
+	ImGui::SFML::Render(window);
 }

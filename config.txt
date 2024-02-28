@@ -1,2 +1,2 @@
 Window 2560 1440 Lucas
-Font fonts/Pretendard-Medium.otf 18 255 255 255 255
+Font Fonts/CascadiaCode.ttf 18 255 255 255 255

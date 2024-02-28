@@ -4,11 +4,11 @@
 
 int main()
 {
-    GameEngine::initialize();
+    GameEngine::get().initialize();
     
     while (window.isOpen())
     {
-        GameEngine::main_loop();
+        GameEngine::get().main_loop();
     }
 
     ImGui::SFML::Shutdown();

@@ -30,30 +30,22 @@ struct Vec2
 	bool  operator<=(const Vec2& rhs) const;
 	bool  operator>(const Vec2& rhs) const;
 	bool  operator>=(const Vec2& rhs) const;
-	Vec2& operator+(float rhs);
 	Vec2  operator+(float rhs) const;
-	Vec2& operator+(const Vec2& rhs);
 	Vec2  operator+(const Vec2& rhs) const;
-	Vec2& operator-(float rhs);
-	Vec2  operator-(float rhs) const;;
-	Vec2& operator-(const Vec2& rhs);
+	Vec2  operator+(const sf::Vector2f& rhs) const;
+	Vec2  operator-(float rhs) const;
 	Vec2  operator-(const Vec2& rhs) const;
-	Vec2& operator*(float rhs);
+	Vec2  operator-(const sf::Vector2f& rhs) const;
 	Vec2  operator*(float spd) const;
-	Vec2& operator*(const Vec2& rhs);
-	Vec2  operator*(const Vec2& rhs) const;
-	Vec2& operator/(float rhs);
 	Vec2  operator/(float rhs) const;
-	Vec2& operator/(const Vec2& rhs);
-	Vec2  operator/(const Vec2& rhs) const;
 	Vec2& operator+=(float rhs);
 	Vec2& operator+=(const Vec2& rhs);
+	Vec2& operator+=(const sf::Vector2f& rhs);
 	Vec2& operator-=(float rhs);
 	Vec2& operator-=(const Vec2& rhs);
+	Vec2& operator-=(const sf::Vector2f& rhs);
 	Vec2& operator*=(float rhs);
-	Vec2& operator*=(const Vec2& rhs);
 	Vec2& operator/=(float rhs);
-	Vec2& operator/=(const Vec2& rhs);
 
 	[[nodiscard]] float length() const;
 	[[nodiscard]] float dist_to(const Vec2& v) const;
@@ -112,59 +104,24 @@ inline bool Vec2::operator>=(const Vec2& rhs) const
 	return x >= rhs.x && y >= rhs.y;
 }
 
-inline Vec2& Vec2::operator+(const float rhs)
-{
-	x += rhs;
-	y += rhs;
-	return *this;
-}
-
 inline Vec2 Vec2::operator+(const float rhs) const
 {
-	return Vec2{this->x + rhs, this->y + rhs};
-}
-
-inline Vec2& Vec2::operator+(const Vec2& rhs)
-{
-	x += rhs.x;
-	y += rhs.y;
-	return *this;
+	return Vec2{*this} += rhs;
 }
 
 inline Vec2 Vec2::operator+(const Vec2& rhs) const
 {
-	return Vec2{this->x + rhs.x, this->y + rhs.y};
-}
-
-inline Vec2& Vec2::operator-(const float rhs)
-{
-	x -= rhs;
-	y -= rhs;
-	return *this;
+	return Vec2{*this} += rhs;
 }
 
 inline Vec2 Vec2::operator-(const float rhs) const
 {
-	return Vec2{this->x - rhs, this->y - rhs};
-}
-
-inline Vec2& Vec2::operator-(const Vec2& rhs)
-{
-	x -= rhs.x;
-	y -= rhs.y;
-	return *this;
+	return Vec2{*this} -= rhs;
 }
 
 inline Vec2 Vec2::operator-(const Vec2& rhs) const
 {
-	return Vec2{this->x - rhs.x, this->y - rhs.y};
-}
-
-inline Vec2& Vec2::operator*(const float rhs)
-{
-	x *= rhs;
-	y *= rhs;
-	return *this;
+	return Vec2{*this} -= rhs;
 }
 
 inline Vec2 Vec2::operator*(const float spd) const
@@ -172,88 +129,63 @@ inline Vec2 Vec2::operator*(const float spd) const
 	return Vec2{this->x * spd, this->y * spd};
 }
 
-inline Vec2& Vec2::operator*(const Vec2& rhs)
-{
-	x *= rhs.x;
-	y *= rhs.y;
-	return *this;
-}
-
-inline Vec2 Vec2::operator*(const Vec2& rhs) const
-{
-	return Vec2{this->x * rhs.x, this->y * rhs.y};
-}
-
-inline Vec2& Vec2::operator/(const float rhs)
-{
-	x /= rhs;
-	y /= rhs;
-	return *this;
-}
-
 inline Vec2 Vec2::operator/(const float rhs) const
 {
-	return Vec2{this->x / rhs, this->y / rhs};
-}
-
-inline Vec2& Vec2::operator/(const Vec2& rhs)
-{
-	x /= rhs.x;
-	y /= rhs.y;
-	return *this;
-}
-
-inline Vec2 Vec2::operator/(const Vec2& rhs) const
-{
-	return Vec2{this->x / rhs.x, this->y / rhs.y};
+	return Vec2{*this} /= rhs;
 }
 
 inline Vec2& Vec2::operator+=(const float rhs)
 {
-	*this = *this + rhs;
+	this->x += rhs;
+	this->y += rhs;
 	return *this;
 }
 
 inline Vec2& Vec2::operator+=(const Vec2& rhs)
 {
-	*this = *this + rhs;
+	this->x += rhs.x;
+	this->y += rhs.y;
 	return *this;
 }
 
 inline Vec2& Vec2::operator-=(const float rhs)
 {
-	*this = *this - rhs;
+	this->x -= rhs;
+	this->y -= rhs;
 	return *this;
 }
 
 inline Vec2& Vec2::operator-=(const Vec2& rhs)
 {
-	*this = *this - rhs;
+	this->x -= rhs.x;
+	this->y -= rhs.y;
 	return *this;
 }
 
 inline Vec2& Vec2::operator*=(const float rhs)
 {
-	*this = *this * rhs;
-	return *this;
-}
-
-inline Vec2& Vec2::operator*=(const Vec2& rhs)
-{
-	*this = *this * rhs;
+	this->x *= rhs;
+	this->y *= rhs;
 	return *this;
 }
 
 inline Vec2& Vec2::operator/=(const float rhs)
 {
-	*this = *this / rhs;
+	this->x /= rhs;
+	this->y /= rhs;
 	return *this;
 }
 
-inline Vec2& Vec2::operator/=(const Vec2& rhs)
+// Interactions with sf::Vector2f
+
+inline Vec2 Vec2::operator+(const sf::Vector2f& rhs) const
 {
-	*this = *this / rhs;
-	return *this;
+	return Vec2{x + rhs.x, y + rhs.y};
+}
+
+inline Vec2 Vec2::operator-(const sf::Vector2f& rhs) const
+{
+	return Vec2{x - rhs.x, y - rhs.y};
 }
 
 inline float Vec2::length() const
@@ -274,7 +206,10 @@ inline float Vec2::dist_to_sqr(const Vec2& v) const
 
 inline void Vec2::normalize()
 {
-	*this /= length();
+	if (const float len = length(); len > FLT_EPSILON)
+	{
+		*this /= len;
+	}
 }
 
 inline Vec2 Vec2::normalized() const
@@ -290,7 +225,6 @@ inline Vec2 Vec2::normalized() const
 }
 
 // Global methods
-
 inline std::ostream& operator<<(std::ostream& os, const Vec2& rhs)
 {
 	return os << "[" << rhs.x << ", " << rhs.y << "]";
@@ -301,22 +235,22 @@ inline Vec2 operator-(const Vec2& rhs)
 	return Vec2{-rhs.x, -rhs.y};
 }
 
-inline Vec2& operator+(const float lhs, Vec2& rhs)
+inline Vec2 operator+(const float lhs, const Vec2& rhs)
 {
 	return rhs + lhs;
 }
 
-inline Vec2& operator-(const float lhs, Vec2& rhs)
+inline Vec2 operator-(const float lhs, const Vec2& rhs)
 {
 	return rhs - lhs;
 }
 
-inline Vec2& operator*(const float lhs, Vec2& rhs)
+inline Vec2 operator*(const float lhs, const Vec2& rhs)
 {
 	return rhs * lhs;
 }
 
-inline Vec2& operator/(const float lhs, Vec2& rhs)
+inline Vec2 operator/(const float lhs, const Vec2& rhs)
 {
 	return rhs / lhs;
 }

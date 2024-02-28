@@ -30,7 +30,9 @@ public:
     void set_background(int r, int g, int b);
 
     void        update() const;
-    static void render(const ENTITY_SET& entities);
+    static void render_objects();
+    static void render_entities(const std::string& tag);
+	static void render_uis();
 
     bool enabled = true;
 };
