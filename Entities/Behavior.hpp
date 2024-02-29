@@ -1,13 +1,15 @@
 ﻿#pragma once
 
 #include "Entity.h"
+#include "../Math.hpp"
 #include "../Components/BBox.h"
 #include "../Components/Shape.h"
 #include "../Components/Transform.hpp"
+#include "../Engine/GameEngine.h"
 
 /* Entity behavior methods
  * -----------------------
- * - Contains player-related procedures.
+ * - Contains interactions between entities
  */
 
 static void fire()
@@ -31,7 +33,8 @@ static void fire()
 static void gain_points(const std::shared_ptr<Entity>& bullet, const std::shared_ptr<Entity>& enemy)
 {
 	EntityManager::get().get_player()->info->player_info->score +=
-			10 * static_cast<int>(enemy->info->enemy_type) * static_cast<int>(enemy->shape->get_point_count());
+			power_int(10, static_cast<int>(enemy->info->enemy_type) + 1) *
+			static_cast<int>(enemy->shape->get_point_count());
 
 	bullet->destroy();
 	switch (enemy->info->enemy_type)
@@ -47,4 +50,14 @@ static void gain_points(const std::shared_ptr<Entity>& bullet, const std::shared
 		[[fallthrough]];
 	case ENEMY_FRAG: enemy->destroy();
 	}
+}
+
+static void lose_health(const std::shared_ptr<Entity>& player, const std::shared_ptr<Entity>& enemy)
+{
+	if (player->info->player_info == nullptr) error("Accessing player_info of non-player entity", 4);
+
+	player->info->player_info->health -= 10;
+	enemy->destroy();
+
+	GameEngine::get().game_over();
 }

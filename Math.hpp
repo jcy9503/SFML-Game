@@ -61,3 +61,15 @@ inline float inv_sqrt(const float val)
 	_mm_store_ps(array, dstRegister);
 	return array[0];
 }
+
+// Does power procedure based on integer
+inline int power_int(const int base, const int n)
+{
+	int result = 1;
+	for(int i = 0; i < n; ++i)
+	{
+		result *= base;
+	}
+
+	return result;
+}

@@ -5,6 +5,7 @@
 #include "../Math.hpp"
 #include "../Entities/Behavior.hpp"
 #include "../Components/Transform.hpp"
+#include "../Engine/GameEngine.h"
 
 void SInput::update()
 {
@@ -13,13 +14,11 @@ void SInput::update()
 		ImGui::SFML::ProcessEvent(window, m_event);
 
 		get_window_event();
-
-		if (!enabled) break;
-
 		get_mouse_event();
 		get_key_event();
 	}
 
+	if (!enabled) return;
 	if (m_moved)
 	{
 		const auto  player = EntityManager::get().get_player();
@@ -40,33 +39,35 @@ void SInput::update()
 void SInput::get_window_event()
 {
 	if (m_event.type == sf::Event::Closed) window.close();
-	/*
-	    if (m_event.type == sf::Event::LostFocus)
-	    {
-	        enabled           = false;
-	        SRender::get().enabled  = false;
-	        SPhysics::get().enabled = false;
-	    }
-	
-	    if (m_event.type == sf::Event::GainedFocus)
-	    {
-	        enabled           = true;
-	        SRender::get().enabled  = true;
-	        SPhysics::get().enabled = true;
-	    }
-	
-	    if (m_event.type == sf::Event::Resized)
-	    {
-	        const sf::Vector2u size{m_event.size.width, m_event.size.height};
-	        window.setSize(size);
-	        window_size = size;
-	    }*/
+
+	if (m_event.type == sf::Event::LostFocus)
+	{
+		GameEngine::get().pause();
+	}
+
+	if (m_event.type == sf::Event::GainedFocus)
+	{
+		GameEngine::get().resume();
+	}
+
+	if (m_event.type == sf::Event::Resized)
+	{
+		const sf::Vector2u size{m_event.size.width, m_event.size.height};
+		window.setSize(size);
+		window_size = size;
+	}
 }
 
-void SInput::get_mouse_event()
+void SInput::get_mouse_event() const
 {
-	// if (m_event.type == sf::Event::MouseButtonPressed);
-	//
+	if (m_event.type == sf::Event::MouseButtonPressed)
+	{
+		if (GameEngine::game_over_predicate())
+		{
+			GameEngine::get().reset();
+		}
+	}
+
 	// if (m_event.type == sf::Event::MouseButtonReleased);
 }
 
@@ -76,6 +77,13 @@ void SInput::get_key_event()
 	const std::shared_ptr<Entity> player = EntityManager::get().get_player();
 	if (m_event.type == Event::KeyPressed)
 	{
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			GameEngine::get().paused ?
+					GameEngine::get().resume() :
+					GameEngine::get().pause();
+		}
+		if (!enabled) return;
 		if (Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::Left))
 		{
 			m_move -= vec2_unit_x;
@@ -102,7 +110,5 @@ void SInput::get_key_event()
 		}
 	}
 
-	if (m_event.type == Event::KeyReleased)
-	{
-	}
+	if (m_event.type == Event::KeyReleased) {}
 }

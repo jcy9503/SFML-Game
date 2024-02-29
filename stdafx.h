@@ -64,11 +64,13 @@ inline std::istream& operator>>(std::istream& is, sf::Color& val)
 	std::quick_exit(exit_num);
 }
 
-// Trimming number to string
-inline std::string trimming_number(const int num, const int length)
+// Trimming number(filling given characters on front) to string
+// default character is '0'
+// example) trimming(12, 8) -> "00000012"
+inline std::string trimming_number(const int num, const int length, const char ch = '0')
 {
 	std::string result = std::to_string(num);
-	result.insert(0, length - result.length(), '0');
+	result.insert(0, length - result.length(), ch);
 
 	return result;
 }

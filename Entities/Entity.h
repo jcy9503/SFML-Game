@@ -33,6 +33,7 @@ struct PlayerInfo
 	float bullet_radius = BULLET_RADIUS;
 	int   score         = 0;
 	int   fire_dir      = 10;
+	int   health        = 100;
 };
 
 struct EntityInfo

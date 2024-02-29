@@ -18,12 +18,9 @@ void SRender::set_background(const int r, const int g, const int b)
 
 void SRender::update() const
 {
-    if (!enabled)
-        return;
-
-    window.clear(m_background);
+	window.clear(m_background);
     render_objects();
-    render_uis();
+	render_uis();
     window.display();
 }
 

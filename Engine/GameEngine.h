@@ -23,7 +23,14 @@ public:
 	GameEngine& operator=(GameEngine const&) = delete;
 	GameEngine& operator=(GameEngine&&)      = delete;
 
-	void initialize();
-	void main_loop();
-	void enemy_spawner(float size, ENEMY_TYPE type);
+	void        initialize();
+	void        reset();
+	void        main_loop();
+	static void enemy_spawner(float size, ENEMY_TYPE type);
+	void        pause();
+	void        resume();
+	static bool game_over_predicate();
+	void        game_over();
+
+	bool paused = false;
 };

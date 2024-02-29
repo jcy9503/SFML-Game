@@ -33,6 +33,4 @@ public:
     static void render_objects();
     static void render_entities(const std::string& tag);
 	static void render_uis();
-
-    bool enabled = true;
 };

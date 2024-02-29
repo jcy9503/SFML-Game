@@ -24,7 +24,7 @@ public:
 	void update();
 
 	void get_window_event();
-	void get_mouse_event();
+	void get_mouse_event() const;
 	void get_key_event();
 
 	bool enabled = true;
