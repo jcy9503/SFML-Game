@@ -19,7 +19,7 @@ public:
 	BBox(const float x, const float y, const float width, const float height)
 		: pos_x(x), pos_y(y), width(width), height(height) {}
 
-	void                reset(const Vec2& pos, float radius);
+	static void         reset(BBox& obj, const Vec2& pos, float radius);
 	[[nodiscard]] Vec2  get_center() const;
 	[[nodiscard]] float get_east() const;
 	[[nodiscard]] float get_west() const;
@@ -32,12 +32,12 @@ public:
 	[[nodiscard]] Vec2 get_southwest() const;
 
 	[[nodiscard]] Vec2 get_in_window_position();
-	void               update_position(const Vec2& pos);
-	void               update_position_offset(const Vec2& vel);
-};
+	static void        update_position(BBox& obj, const Vec2& pos);
+	static void        update_position_offset(BBox& obj, const Vec2& vel);
 
-bool window_bounce_horizontal(const BBox& obj);
-bool window_bounce_vertical(const BBox& obj);
-bool window_out(const BBox& obj);
-bool intersect_circles(const BBox& lhs, const BBox& rhs);
-bool intersect_boxes(const BBox& lhs, const BBox& rhs);
+	static bool window_bounce_horizontal(const BBox& obj);
+	static bool window_bounce_vertical(const BBox& obj);
+	static bool window_out(const BBox& obj);
+	static bool intersect_circles(const BBox& lhs, const BBox& rhs);
+	static bool intersect_boxes(const BBox& lhs, const BBox& rhs);
+};

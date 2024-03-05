@@ -55,7 +55,6 @@ void EntityManager::update()
 	{
 		if ((*eIter)->dead())
 		{
-			(*eIter)->info->player_info = nullptr;
 			m_deleted.push_back(*eIter);
 
 			std::string tag = (*eIter)->tag();
@@ -104,16 +103,16 @@ std::shared_ptr<Entity> EntityManager::add_entity(
 		entity->shape     = std::make_shared<Shape>(pos, size, segments, col, vel.length());
 		entity->bbox      = std::make_shared<BBox>(pos, size);
 		entity->info      = std::make_shared<EntityInfo>();
-		m_toAdd.insert(entity);
+		m_toAdd.push_back(entity);
 	}
 	else
 	{
 		entity = m_deleted.back();
 		entity->reuse(tag);
 		entity->transform->set_velocity(vel);
-		entity->shape->reset(pos, segments, size, vel.length(), col);
-		entity->bbox->reset(pos, size);
-		m_toAdd.insert(entity);
+		Shape::reset(*entity->shape, pos, segments, size, vel.length(), col);
+		BBox::reset(*entity->bbox, pos, size);
+		m_toAdd.push_back(entity);
 		m_deleted.pop_back();
 	}
 
@@ -129,19 +128,4 @@ std::shared_ptr<Entity> EntityManager::add_entity(
 	}
 
 	return entity;
-}
-
-ENTITY_SET& EntityManager::get_entities()
-{
-	return m_entities;
-}
-
-ENTITY_SET& EntityManager::get_entities(const std::string& tag)
-{
-	return m_entityMap[tag];
-}
-
-std::shared_ptr<Entity> EntityManager::get_player()
-{
-	return m_player;
 }

@@ -7,7 +7,6 @@ class SPhysics
 	SPhysics()  = default;
 	~SPhysics() = default;
 
-	sf::Clock              m_clock    = {};
 	std::vector<void(*)()> m_colEvent = {};
 
 public:

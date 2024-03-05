@@ -27,10 +27,11 @@ float Rand::random(const float min, const float max)
 Vec2 Rand::random(const Vec2& min, const Vec2& max, const float size)
 {
 	Vec2 output{0.f, 0.f};
-	if (const Vec2 maxTp = max - size; min <= maxTp || min >= maxTp)
+	if (const Vec2 maxTp = max - size / 2, minTp = min - size / 2;
+		minTp <= maxTp)
 	{
-		output.x = random(min.x, maxTp.x);
-		output.y = random(min.y, maxTp.y);
+		output.x = random(minTp.x, maxTp.x);
+		output.y = random(minTp.y, maxTp.y);
 	}
 
 	return output;

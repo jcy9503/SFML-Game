@@ -24,9 +24,9 @@ public:
 	[[nodiscard]] Vec2  get_velocity() const { return m_vel; }
 	void                set_velocity(const Vec2& val);
 
-	void bounce_horizontal();
-	void bounce_vertical();
-	void bounce_both();
+	static void bounce_horizontal(Transform& obj);
+	static void bounce_vertical(Transform& obj);
+	static void bounce_both(Transform& obj);
 
 	__declspec(property(get = get_direction, put = set_direction))
 	Vec2 direction;
@@ -56,20 +56,20 @@ inline void Transform::set_velocity(const Vec2& val)
 	m_dir = val.normalized();
 }
 
-inline void Transform::bounce_horizontal()
+inline void Transform::bounce_horizontal(Transform& obj)
 {
-	m_dir.x = -m_dir.x;
-	m_vel.x = -m_vel.x;
+	obj.m_dir.x = -obj.m_dir.x;
+	obj.m_vel.x = -obj.m_vel.x;
 }
 
-inline void Transform::bounce_vertical()
+inline void Transform::bounce_vertical(Transform& obj)
 {
-	m_dir.y = -m_dir.y;
-	m_vel.y = -m_vel.y;
+	obj.m_dir.y = -obj.m_dir.y;
+	obj.m_vel.y = -obj.m_vel.y;
 }
 
-inline void Transform::bounce_both()
+inline void Transform::bounce_both(Transform& obj)
 {
-	bounce_horizontal();
-	bounce_vertical();
+	bounce_horizontal(obj);
+	bounce_vertical(obj);
 }

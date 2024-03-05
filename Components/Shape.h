@@ -11,9 +11,11 @@ class Shape
 public:
 	Shape(const Vec2& pos, float rad, int segments, const sf::Color& col, float rot_speed);
 
-	void reset(const Vec2& pos, size_t p_count, float rad, float rot_speed, const sf::Color& col);
-	void update_position_offset(const Vec2& vel);
-	void update_rotation();
+	static void reset(
+		Shape& obj, const Vec2& pos, size_t                 p_count,
+		float  rad, float       rot_speed, const sf::Color& col);
+	static void update_position_offset(Shape& obj, const Vec2& vel);
+	static void update_rotation(Shape& obj);
 
 	sf::CircleShape circle;
 

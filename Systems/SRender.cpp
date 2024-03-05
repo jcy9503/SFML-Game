@@ -38,7 +38,7 @@ void SRender::render_entities(const std::string& tag)
 	for(const auto& entity : entities)
 	{
 		window.draw(entity->shape->circle);
-		entity->shape->update_rotation();
+		Shape::update_rotation(*entity->shape);
 	}
 }
 

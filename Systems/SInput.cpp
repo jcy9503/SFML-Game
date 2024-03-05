@@ -18,16 +18,20 @@ void SInput::update()
 		get_key_event();
 	}
 
-	if (!enabled) return;
-	if (m_moved)
+	if (!enabled)
+	{
+		m_move  = vec2_zero;
+		m_moved = false;
+	}
+	else if (m_moved)
 	{
 		const auto  player = EntityManager::get().get_player();
 		auto        vec    = player->transform->get_velocity();
 		const float spdMax = player->info->player_info->player_speed;
 		vec += m_move * spdMax;
 		vec = Vec2{
-			clamp(vec.x, -spdMax, spdMax),
-			clamp(vec.y, -spdMax, spdMax)
+			math::clamp(vec.x, -spdMax, spdMax),
+			math::clamp(vec.y, -spdMax, spdMax)
 		};
 		EntityManager::get().get_player()->transform->velocity = vec;
 
@@ -36,7 +40,7 @@ void SInput::update()
 	}
 }
 
-void SInput::get_window_event()
+void SInput::get_window_event() const
 {
 	if (m_event.type == sf::Event::Closed) window.close();
 
@@ -66,9 +70,11 @@ void SInput::get_mouse_event() const
 		{
 			GameEngine::get().reset();
 		}
+		if (GameEngine::get().paused)
+		{
+			GameEngine::get().resume();
+		}
 	}
-
-	// if (m_event.type == sf::Event::MouseButtonReleased);
 }
 
 void SInput::get_key_event()
@@ -109,6 +115,4 @@ void SInput::get_key_event()
 			fire();
 		}
 	}
-
-	if (m_event.type == Event::KeyReleased) {}
 }

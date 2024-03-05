@@ -39,9 +39,6 @@ enum
 #define SPEED_MAX 500.f
 #define ROT_SPEED_MAX 500.f
 
-// Math-related variables
-inline float pi_f;
-
 // Global methods
 
 // Color input output stream operator overloading

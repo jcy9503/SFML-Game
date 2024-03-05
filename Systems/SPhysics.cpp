@@ -6,14 +6,20 @@
 
 void SPhysics::initialize()
 {
+	// Enemies & Bullets entity collision
 	add_event([]
 	{
 		circle_collision(EntityManager::get().get_entities("Bullet"),
-			EntityManager::get().get_entities("Enemy"),
-			gain_points);
+		                 EntityManager::get().get_entities("Enemy"),
+		                 gain_points);
+	});
+	
+	// Player & Enemies entity collision
+	add_event([]
+	{
 		circle_collision(EntityManager::get().get_entities("Player"),
-			EntityManager::get().get_entities("Enemy"),
-			lose_health);
+						 EntityManager::get().get_entities("Enemy"),
+						 lose_health);
 	});
 }
 
@@ -34,8 +40,8 @@ void SPhysics::move(const ENTITY_SET& entities)
 {
 	for (const auto& entity : entities)
 	{
-		entity->shape->update_position_offset(entity->transform->get_velocity());
-		entity->bbox->update_position(entity->shape->get_position());
+		Shape::update_position_offset(*entity->shape, entity->transform->get_velocity());
+		BBox::update_position(*entity->bbox, entity->shape->get_position());
 	}
 }
 
@@ -43,7 +49,7 @@ void SPhysics::destroy_out_objs(const ENTITY_SET& entities)
 {
 	for (const auto& entity : entities)
 	{
-		if (window_out(*entity->bbox))
+		if (BBox::window_out(*entity->bbox))
 		{
 			entity->destroy();
 		}
@@ -54,8 +60,10 @@ void SPhysics::bounce_window(const ENTITY_SET& entities)
 {
 	for (const auto& entity : entities)
 	{
-		if (window_bounce_horizontal(*entity->bbox)) entity->transform->bounce_horizontal();
-		if (window_bounce_vertical(*entity->bbox)) entity->transform->bounce_vertical();
+		if (BBox::window_bounce_horizontal(*entity->bbox))
+			Transform::bounce_horizontal(*entity->transform);
+		if (BBox::window_bounce_vertical(*entity->bbox))
+			Transform::bounce_vertical(*entity->transform);
 	}
 }
 
@@ -64,8 +72,8 @@ void SPhysics::friction(const ENTITY_SET& entities)
 	for (const auto& entity : entities)
 	{
 		if (entity->transform->friction < FLT_EPSILON) continue;
-		entity->transform->speed = lerp(entity->transform->speed, 0.f,
-		                                delta_time * entity->transform->friction);
+		entity->transform->speed = math::lerp(entity->transform->speed, 0.f,
+		                                      delta_time * entity->transform->friction);
 	}
 }
 
@@ -73,7 +81,8 @@ void SPhysics::stick_to_window(const ENTITY_SET& entities)
 {
 	for (const auto& entity : entities)
 	{
-		if (window_bounce_horizontal(*entity->bbox) || window_bounce_vertical(*entity->bbox))
+		if (BBox::window_bounce_horizontal(*entity->bbox) ||
+		    BBox::window_bounce_vertical(*entity->bbox))
 		{
 			const Vec2 pos          = entity->bbox->get_in_window_position();
 			entity->shape->position = pos;
@@ -102,7 +111,7 @@ void SPhysics::circle_collision(
 	{
 		for (const auto& e2 : group2)
 		{
-			if (intersect_circles(*e1->bbox, *e2->bbox)) callback(e1, e2);
+			if (BBox::intersect_circles(*e1->bbox, *e2->bbox)) callback(e1, e2);
 		}
 	}
 }
@@ -115,7 +124,7 @@ void SPhysics::box_collision(
 	{
 		for (const auto& e2 : group2)
 		{
-			if (intersect_boxes(*e1->bbox, *e2->bbox)) callback(e1, e2);
+			if (BBox::intersect_boxes(*e1->bbox, *e2->bbox)) callback(e1, e2);
 		}
 	}
 }

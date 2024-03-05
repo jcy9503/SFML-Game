@@ -26,7 +26,7 @@ public:
 	void        initialize();
 	void        reset();
 	void        main_loop();
-	static void enemy_spawner(float size, ENEMY_TYPE type);
+	static void enemy_spawner();
 	void        pause();
 	void        resume();
 	static bool game_over_predicate();

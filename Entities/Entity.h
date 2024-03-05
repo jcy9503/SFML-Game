@@ -88,7 +88,7 @@ class EntityManager
 	~EntityManager() = default;
 
 	ENTITY_SET              m_entities      = {};
-	ENTITY_SET              m_toAdd         = {};
+	ENTITY_VECTOR           m_toAdd         = {};
 	ENTITY_VECTOR           m_deleted       = {};
 	ENTITY_MAP              m_entityMap     = {};
 	std::shared_ptr<Entity> m_player        = {};
@@ -112,9 +112,9 @@ public:
 	std::shared_ptr<Entity> add_entity(
 		const std::string& tag, const Vec2& pos,
 		const Vec2&        vel, float       size, int type, size_t segments, const sf::Color& col);
-	ENTITY_SET&             get_entities();
-	ENTITY_SET&             get_entities(const std::string& tag);
+	ENTITY_SET&             get_entities() { return m_entities; }
+	ENTITY_SET&             get_entities(const std::string& tag) { return m_entityMap[tag]; }
 	[[nodiscard]] size_t    get_deleted_count() const { return m_deleted.size(); }
-	std::shared_ptr<Entity> get_player();
+	std::shared_ptr<Entity> get_player() { return m_player; }
 	[[nodiscard]] size_t    get_entity_count() const { return m_totalEntities; }
 };

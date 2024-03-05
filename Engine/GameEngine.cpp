@@ -1,6 +1,7 @@
 ﻿#include "GameEngine.h"
 
 #include "../stdafx.h"
+#include "../Components/BBox.h"
 #include "../Components/Shape.h"
 #include "../Systems/SInput.h"
 #include "../Systems/SInterface.h"
@@ -68,17 +69,25 @@ void GameEngine::main_loop()
 	m_elapsed += delta_time;
 	if (m_elapsed > m_enemyInterval)
 	{
-		enemy_spawner(Rand::random(enemy_radius.x, enemy_radius.y), ENEMY_NORMAL);
+		enemy_spawner();
 		m_elapsed -= m_enemyInterval;
 	}
 }
 
-void GameEngine::enemy_spawner(const float size, const ENEMY_TYPE type)
+void GameEngine::enemy_spawner()
 {
+	const float size = Rand::random(enemy_radius.x, enemy_radius.y);
+	Vec2        pos  = Rand::random_pos(size);
+	auto        box  = BBox(pos, PLAYER_RADIUS * 3);
+	while (BBox::intersect_boxes(*EntityManager::get().get_player()->bbox, box))
+	{
+		pos = Rand::random_pos(size);
+		BBox::reset(box, pos, PLAYER_RADIUS * 3);
+	}
+
 	const auto e = EntityManager::get().add_entity
-			("Enemy",
-			 Rand::random_pos(size),
-			 Rand::random_vel(), size, type,
+			("Enemy", pos,
+			 Rand::random_vel(), size, ENEMY_NORMAL,
 			 Rand::random_segments(), Rand::random_color());
 	e->shape->rotation_speed = e->transform->speed;
 }
@@ -106,11 +115,8 @@ bool GameEngine::game_over_predicate()
 
 void GameEngine::game_over()
 {
-	if (game_over_predicate())
-	{
-		paused                  = true;
-		SInput::get().enabled   = false;
-		SPhysics::get().enabled = false;
-		SInterface::get().game_over(true);
-	}
+	paused                  = true;
+	SInput::get().enabled   = false;
+	SPhysics::get().enabled = false;
+	SInterface::get().game_over(true);
 }

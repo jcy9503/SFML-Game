@@ -111,7 +111,7 @@ void SInterface::update_player() const
 
 	ImGui::Text("BULLET CONTROL");
 	ImGui::SliderFloat("Bullet Speed",
-					   &playerInfo->bullet_speed, 100.f, 1000.f);
+	                   &playerInfo->bullet_speed, 100.f, 1000.f);
 	ImGui::SliderInt("Bullet Count",
 	                 &playerInfo->fire_dir, 1, 100);
 	ImGui::PopFont();
